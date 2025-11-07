@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>🐾 Cat Gallery 🐾</title>
+
+  <!-- Firebase v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    h2 {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .cat-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      margin: 10px;
+      padding: 15px;
+      width: 250px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .cat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🐾 My Cat Gallery 🐾</h2>
+  <div id="cats"></div>
+
+  <script>
+    // 🔥 Your Firebase project config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDuDdk-EOugyFzAHHK3yXeBa4TrQoPvhfQ",
+      authDomain: "imgtest-8e764.firebaseapp.com",
+      databaseURL: "https://imgtest-8e764-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "imgtest-8e764",
+      storageBucket: "imgtest-8e764.firebasestorage.app",
+      messagingSenderId: "92735127828",
+      appId: "1:92735127828:web:e169fdb50809a885358444"
+    };
+
+    // 🔧 Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 🐱 Load cat data from /cats node
+    db.ref("/cats").once("value").then(snapshot => {
+      const cats = snapshot.val();
+      console.log("Raw data from /cats:", cats);
+
+      const container = document.getElementById("cats");
+      container.innerHTML = "";
+
+      for (let id in cats) {
+        const cat = cats[id];
+        console.log("Rendering cat:", id, cat);
+
+        const card = document.createElement("div");
+        card.className = "cat-card";
+        card.innerHTML = `
+          <img src="${cat.photo_url || ''}" alt="${cat.name || 'Unnamed'}" />
+          <h3>${cat.name || 'Unnamed'}</h3>
+          <p><b>Age:</b> ${cat.age || '?'}</p>
+          <p><b>Breed:</b> ${cat.breed || '?'}</p>
+          <p><b>Food:</b> ${cat.food_brand || '?'}</p>
+        `;
+        container.appendChild(card);
+      }
+    }).catch(err => console.error("Error:", err));
+  </script>
+</body>
+</html>
