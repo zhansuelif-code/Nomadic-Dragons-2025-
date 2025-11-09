@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>🐾 Cat Gallery 🐾</title>
+  <title>🏺 Artifact Gallery 🏺</title>
 
   <!-- Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -11,7 +11,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #fafafa;
+      background: #f5f5f0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -23,17 +23,17 @@
       margin-bottom: 20px;
       color: #333;
     }
-    .cat-card {
+    .artifact-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       margin: 10px;
       padding: 15px;
-      width: 250px;
+      width: 260px;
       text-align: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .cat-card:hover {
+    .artifact-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 6px 14px rgba(0,0,0,0.2);
     }
@@ -45,8 +45,8 @@
   </style>
 </head>
 <body>
-  <h2>🐾 My Cat Gallery 🐾</h2>
-  <div id="cats"></div>
+  <h2>🏺 Ancient Artifact Gallery 🏺</h2>
+  <div id="artifacts"></div>
 
   <script>
     // 🔥 Your Firebase project config
@@ -64,30 +64,32 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 🐱 Load cat data from /cats node
-    db.ref("/cats").once("value").then(snapshot => {
-      const cats = snapshot.val();
-      console.log("Raw data from /cats:", cats);
+    // 🏺 Load artifact data from /artifacts node
+    db.ref("/artifacts").once("value").then(snapshot => {
+      const artifacts = snapshot.val();
+      console.log("Raw data from /artifacts:", artifacts);
 
-      const container = document.getElementById("cats");
+      const container = document.getElementById("artifacts");
       container.innerHTML = "";
 
-      for (let id in cats) {
-        const cat = cats[id];
-        console.log("Rendering cat:", id, cat);
+      for (let id in artifacts) {
+        const artifact = artifacts[id];
+        console.log("Rendering artifact:", id, artifact);
 
         const card = document.createElement("div");
-        card.className = "cat-card";
+        card.className = "artifact-card";
         card.innerHTML = `
-          <img src="${cat.photo_url || ''}" alt="${cat.name || 'Unnamed'}" />
-          <h3>${cat.name || 'Unnamed'}</h3>
-          <p><b>Age:</b> ${cat.age || '?'}</p>
-          <p><b>Breed:</b> ${cat.breed || '?'}</p>
-          <p><b>Food:</b> ${cat.food_brand || '?'}</p>
+          <img src="${artifact.photo_url || ''}" alt="${artifact.name || 'Unknown Artifact'}" />
+          <h3>${artifact.name || 'Unknown Artifact'}</h3>
+          <p><b>Civilization:</b> ${artifact.civilization || 'N/A'}</p>
+          <p><b>Age:</b> ${artifact.age || 'N/A'}</p>
+          <p><b>Origins:</b> ${artifact.origins || 'N/A'}</p>
+          <p><b>Culture:</b> ${artifact.culture || 'N/A'}</p>
+          <p><b>Location:</b> ${artifact.location || 'N/A'}</p>
         `;
         container.appendChild(card);
       }
-    }).catch(err => console.error("Error:", err));
+    }).catch(err => console.error("Error loading artifacts:", err));
   </script>
 </body>
 </html>
